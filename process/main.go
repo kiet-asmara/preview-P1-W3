@@ -12,8 +12,12 @@ func main() {
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 
+	// inputs
+	input := os.Args[1]
+	output := os.Args[2]
+
 	// open csv
-	file, err := os.Open("input.csv")
+	file, err := os.Open(input)
 	if err != nil {
 		panic(err)
 	}
@@ -55,13 +59,14 @@ func main() {
 	fmt.Println(data)
 
 	// Write the CSV data
-	file2, err := os.Create("output.csv")
+	file2, err := os.Create(output)
 	if err != nil {
 		panic(err)
 	}
 	defer file2.Close()
 
 	writer := csv.NewWriter(file2)
+	defer writer.Flush()
 	for _, row := range data {
 		writer.Write(row)
 	}
